@@ -1,30 +1,28 @@
 name: Build Minecraft Plugin
 
 on:
+  workflow_dispatch: # 允许手动触发
   push:
     branches:
-      - main # 触发构建的分支，可以根据需要修改
+      - main
   pull_request:
     branches:
       - main
 
 jobs:
   build:
-    runs-on: windows-latest # 使用最新的 Windows 系统
+    runs-on: windows-latest
 
     steps:
-      # 检出代码仓库
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # 设置 Java 21 环境
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
-          distribution: 'temurin' # 使用 Eclipse Temurin 提供的 OpenJDK 构建
+          distribution: 'temurin'
 
-      # 缓存 Gradle 依赖以加速构建
       - name: Cache Gradle Dependencies
         uses: actions/cache@v3
         with:
@@ -35,14 +33,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 下载依赖并构建项目
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
-
-      # 上传构建结果（可选）
-      - name: Upload Build Artifact
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: plugin-build
-          path: build/libs/*.jar # 假设构建结果是 JAR 文件，路径可能需要根据实际情况调整
