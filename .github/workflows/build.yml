@@ -37,10 +37,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --no-daemon --parallel --build-cache
 
-      # 上传构建结果
+      # 上传构建结果（使用最新版本 v4）
       - name: Upload Build Artifact
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: plugin-build
           path: build/libs/*.jar # 假设构建结果是 JAR 文件
